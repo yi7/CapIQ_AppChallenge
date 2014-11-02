@@ -1,5 +1,7 @@
 package com.example.quickcompapp;
 
+import java.io.Serializable;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,7 +21,8 @@ public class MainActivity extends Activity {
 	private Button mGraphButton;
 	private Button mTableButton;
 	
-	private GDSSDKResponse[] sdkResponse;
+	//private GDSSDKResponse[] sdkResponse;
+	private String returned;
 	
 	private static final String TAG = "MainActivity";
 
@@ -58,9 +61,11 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(MainActivity.this, TableActivity.class);
+				
 				try{
-					i.putExtra( "sdkResponse", sdkResponse );
+					i.putExtra( "json", returned );
 					startActivity( i );
+					
 				} catch( Exception e ) {
 					Log.d( TAG, "error" );
 				}
@@ -69,12 +74,10 @@ public class MainActivity extends Activity {
 	}
 	
 	public void setResponse( String returned ) {
-		Gson gson = new Gson();
-		Response response = gson.fromJson( returned, Response.class );
-		sdkResponse = response.getGDSSDKResponse();
+		this.returned = returned;
 	}
 	
-	private class LoadData extends AsyncTask<String, Void, String> {
+	public class LoadData extends AsyncTask<String, Void, String> {
 		String returned;
 		
 		String function;
