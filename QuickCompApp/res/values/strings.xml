@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">QuickCompApp</string>
+    <string name="action_settings">Settings</string>
+    <color name="black">#000000</color>
+    
+    <string name="graph_button">Graph</string>
+    <string name="table_button">Table</string>
+    <string name="back_button">Back</string>
+    
+   	<string name="marketCapR1">------.------</string>
+   	<string name="totalRevR1">------.------</string>
+   	<string name="totalAssetsR1">------.------</string>
+
+</resources>
