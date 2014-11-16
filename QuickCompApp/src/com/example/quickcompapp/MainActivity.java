@@ -1,6 +1,7 @@
 package com.example.quickcompapp;
 
 import java.io.Serializable;
+import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -33,11 +34,18 @@ public class MainActivity extends Activity {
 		
 		//StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build();
 		//StrictMode.setThreadPolicy(policy);
-		
 		String function = "GDSHE";
 		String identifier = "AMZN";
 		String mnemonic = "IQ_QUICK_COMP";
-		new LoadData(function, identifier, mnemonic).execute();
+		try {
+			returned = new LoadData(function, identifier, mnemonic).execute().get();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ExecutionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		mGraphButton = (Button)findViewById(R.id.graph_button);
         mGraphButton.setOnClickListener(new View.OnClickListener() {
@@ -73,11 +81,11 @@ public class MainActivity extends Activity {
 		});
 	}
 	
-	public void setResponse( String returned ) {
+	/*public void setResponse( String returned ) {
 		this.returned = returned;
-	}
+	}*/
 	
-	public class LoadData extends AsyncTask<String, Void, String> {
+	/*public class LoadData extends AsyncTask<String, Void, String> {
 		String returned;
 		
 		String function;
@@ -108,7 +116,7 @@ public class MainActivity extends Activity {
 			MainActivity.this.setResponse( result );
 		}
 		
-	}
+	}*/
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

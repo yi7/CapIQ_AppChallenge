@@ -52,7 +52,7 @@ public class GetData {
 		/*String urlParameters = "inputRequests="
 							 + "{inputRequests:"
 							 	+ "["
-							 		+ "{function:'GDSHE',identifier:'AMZN',mnemonic:'IQ_QUICK_COMP',properties:{STARTRANK:'1',ENDRANK:'5'}},"
+							 		+ "{function:'GDSHE',identifier:'GOOGL',mnemonic:'IQ_QUICK_COMP',properties:{STARTRANK:'1',ENDRANK:'5'}},"
 							 	+ "]"
 							 + "}";*/
 
