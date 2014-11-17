@@ -1,19 +1,20 @@
 package com.example.quickcompapp;
 
-import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import com.google.gson.Gson;
+import android.widget.EditText;
 //import android.os.StrictMode;
 // Must add commons-codec-1.9.jar to build path
 
@@ -22,7 +23,7 @@ public class MainActivity extends Activity {
 	private Button mGraphButton;
 	private Button mTableButton;
 	
-	//private GDSSDKResponse[] sdkResponse;
+	final Context context = this;
 	private String returned;
 	
 	private static final String TAG = "MainActivity";
@@ -34,18 +35,7 @@ public class MainActivity extends Activity {
 		
 		//StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build();
 		//StrictMode.setThreadPolicy(policy);
-		String function = "GDSHE";
-		String identifier = "AMZN";
-		String mnemonic = "IQ_QUICK_COMP";
-		try {
-			returned = new LoadData(function, identifier, mnemonic).execute().get();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ExecutionException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
 		
 		mGraphButton = (Button)findViewById(R.id.graph_button);
         mGraphButton.setOnClickListener(new View.OnClickListener() {
@@ -68,15 +58,56 @@ public class MainActivity extends Activity {
         mTableButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(MainActivity.this, TableActivity.class);
+				//get prompts.xml view
+				LayoutInflater li = LayoutInflater.from(context);
+				View promptsView = li.inflate(R.layout.prompts, null );
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 				
-				try{
-					i.putExtra( "json", returned );
-					startActivity( i );
-					
-				} catch( Exception e ) {
-					Log.d( TAG, "error" );
-				}
+				//set prompts.xml to alertdialog builder
+				alertDialogBuilder.setView(promptsView);
+				final EditText userInput = (EditText) promptsView.findViewById(R.id.editTextDialogUserInput);
+				
+				//set dialog message
+				alertDialogBuilder
+					.setCancelable(false)
+					.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									String identifier = userInput.getText().toString();
+									try {
+										returned = new LoadData("GDSHE", identifier, "IQ_QUICK_COMP").execute().get();
+									} catch (InterruptedException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									} catch (ExecutionException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
+									
+									Intent i = new Intent(MainActivity.this, TableActivity.class);
+									try{
+										i.putExtra( "json", returned );
+										startActivity( i );
+										
+									} catch( Exception e ) {
+										Log.d( TAG, "error" );
+									}
+								}
+							})
+					.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									// TODO Auto-generated method stub
+									dialog.cancel();
+								}
+					});
+				
+				AlertDialog alertDialog = alertDialogBuilder.create();
+				alertDialog.show();
+				
+				
 			}
 		});
 	}
