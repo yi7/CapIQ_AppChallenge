@@ -33,22 +33,22 @@ public class TableActivity extends Activity {
 			pd.createGson();
 			sdkResponse = pd.getSdkResponse();
 			
-			createTableRow( "Companies", "MarketCap", "LastPrice", "TotalRevenue", "BasicEPS", "NetMargin" );
+			createTableRow( "Ticker", "Market Cap ($MM)", "Close Price ($MM)", "Total Revenue ($MM)", "Basic EPS ($)", "Net Margin (%)" );
 			
-			String tempMarketCap, tempLastPrice, tempTotalRev, tempBasicEPS, tempNetMargin;
+			String tempMarketCap, tempClosePrice, tempTotalRev, tempBasicEPS, tempNetMargin;
 			for( Rows r : sdkResponse[0].getRows() ) {
 				int cutIndex = r.getRow()[0].indexOf(':');
 				GDSSDKResponse[] tempResponse1=null, tempResponse2=null, tempResponse3=null, tempResponse4=null, tempResponse5=null;
 				
 				try {
 					tempMarketCap = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_MARKETCAP").execute().get();
-					tempLastPrice = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_LASTSALEPRICE").execute().get();
+					tempClosePrice = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_CLOSEPRICE").execute().get();
 					tempTotalRev = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_TOTAL_REV").execute().get();
 					tempBasicEPS = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_BASIC_EPS_INCL").execute().get();
 					tempNetMargin = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_NI_MARGIN").execute().get();
 					
 					ParseData tempMCData = new ParseData( tempMarketCap );
-					ParseData tempLPData = new ParseData( tempLastPrice );
+					ParseData tempLPData = new ParseData( tempClosePrice );
 					ParseData tempTRData = new ParseData( tempTotalRev );
 					ParseData tempBEPSData = new ParseData( tempBasicEPS );
 					ParseData tempNMData = new ParseData( tempNetMargin );
@@ -85,12 +85,12 @@ public class TableActivity extends Activity {
 		
 	}
 	
-	public void createTableRow( String company, String marketCap, String lastPrice, String totalRev, String basicEPS, String netMargin ) {
+	public void createTableRow( String ticker, String marketCap, String closePrice, String totalRev, String basicEPS, String netMargin ) {
 		
-		String[] dataList = {marketCap, lastPrice, totalRev, basicEPS, netMargin}; String temp;
+		String[] dataList = {marketCap, closePrice, totalRev, basicEPS, netMargin}; String temp;
 		for( int i = 0; i < dataList.length; i++ ) {
 			if( dataList[i].equals("Data Unavailable")) {
-				dataList[i] = "N/A";
+				dataList[i] = "-----";
 			}
 			else if( dataList[i].indexOf('.') > 0 ) {
 				temp = dataList[i].substring( 0, dataList[i].length() - 4 );
@@ -105,17 +105,19 @@ public class TableActivity extends Activity {
 		
 		TextView companies = new TextView(this);
 		companies.setLayoutParams(lp);
-		companies.setText( company );
+		companies.setTextColor(Color.WHITE);
+		companies.setText( ticker );
 		tr.addView(companies);
 		
 		for( int i = 0; i < dataList.length; i++ ) {
 			TextView space = new TextView(this);
 			space.setLayoutParams(lp);
-			space.setText( "   " );
+			space.setText( "    " );
 			tr.addView(space);
 			
 			TextView data = new TextView(this);
 			data.setLayoutParams(lp);
+			data.setTextColor(Color.WHITE);
 			data.setText( dataList[i] );
 			tr.addView(data);
 		}
