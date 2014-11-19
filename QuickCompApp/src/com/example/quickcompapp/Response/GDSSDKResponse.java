@@ -1,6 +1,7 @@
-package com.example.quickcompapp;
+package com.example.quickcompapp.Response;
 
 import java.io.Serializable;
+
 
 @SuppressWarnings("serial")
 public class GDSSDKResponse implements Serializable{

@@ -1,5 +1,7 @@
-package com.example.quickcompapp;
+package com.example.quickcompapp.Access;
 
+import com.example.quickcompapp.Response.GDSSDKResponse;
+import com.example.quickcompapp.Response.Response;
 import com.google.gson.Gson;
 
 public class ParseData {

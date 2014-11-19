@@ -1,4 +1,4 @@
-package com.example.quickcompapp;
+package com.example.quickcompapp.Response;
 
 public class Rows {
 	private String[] Row;

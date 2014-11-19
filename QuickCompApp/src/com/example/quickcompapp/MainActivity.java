@@ -2,6 +2,8 @@ package com.example.quickcompapp;
 
 import java.util.concurrent.ExecutionException;
 
+import com.example.quickcompapp.Access.LoadData;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
