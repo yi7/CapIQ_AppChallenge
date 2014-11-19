@@ -1,4 +1,5 @@
-package com.example.quickcompapp;
+package com.example.quickcompapp.Response;
+
 
 public class Response {
 	private GDSSDKResponse[] GDSSDKResponse;

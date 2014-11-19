@@ -1,5 +1,10 @@
 package com.example.quickcompapp;
 
+import com.example.quickcompapp.Access.LoadData;
+import com.example.quickcompapp.Access.ParseData;
+import com.example.quickcompapp.Response.GDSSDKResponse;
+import com.example.quickcompapp.Response.Rows;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -36,11 +41,18 @@ public class TableActivity extends Activity {
 			createTableRow( "Ticker", "Market Cap ($MM)", "Close Price ($MM)", "Total Revenue ($MM)", "Basic EPS ($)", "Net Margin (%)" );
 			
 			String tempMarketCap, tempClosePrice, tempTotalRev, tempBasicEPS, tempNetMargin;
+			String[] mnemonics = {"IQ_MARKETCAP","IQ_CLOSEPRICE","IQ_TOTAL_REV","IQ_BASIC_EPS_INCL","IQ_NI_MARGIN"};
 			for( Rows r : sdkResponse[0].getRows() ) {
 				int cutIndex = r.getRow()[0].indexOf(':');
 				GDSSDKResponse[] tempResponse1=null, tempResponse2=null, tempResponse3=null, tempResponse4=null, tempResponse5=null;
 				
 				try {
+					/*for( String mnemonic: mnemonics ) {
+						tempJson = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), mnemonic).execute().get();
+						ParseData tempGson = new ParseData( tempJson );
+						tempGson.createGson();
+						tempResponse = tempGson.getSdkResponse();
+					}*/
 					tempMarketCap = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_MARKETCAP").execute().get();
 					tempClosePrice = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_CLOSEPRICE").execute().get();
 					tempTotalRev = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_TOTAL_REV").execute().get();

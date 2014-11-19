@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GraphActivity"
+            android:name=".BarChartActivity"
             android:label="@string/app_name" />
         <activity
             android:name=".TableActivity"

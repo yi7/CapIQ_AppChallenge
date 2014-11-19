@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class GraphActivity extends Activity {
+public class BarChartActivity extends Activity {
 	
 	private Button mBackButton;
 
@@ -19,7 +19,7 @@ public class GraphActivity extends Activity {
         mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(GraphActivity.this, MainActivity.class);
+				Intent i = new Intent(BarChartActivity.this, MainActivity.class);
 				startActivity( i );
 			}
 		});

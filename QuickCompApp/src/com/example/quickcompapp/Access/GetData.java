@@ -1,4 +1,4 @@
-package com.example.quickcompapp;
+package com.example.quickcompapp.Access;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
