@@ -15,13 +15,14 @@ public class GetData {
 	private String urlParameters;
 	
 	public void setUrlParameters(String function, String identifier, String mnemonic, String properties ) {
+		//"STARTRANK:'1',ENDRANK:'5'"
 		urlParameters = "inputRequests="
 				 + "{inputRequests:"
 				 	+ "["
 				 		+ "{function:"+ "\'" + function + "\'"
 				 		+ ",identifier:" + "\'" + identifier + "\'"
 				 		+ ",mnemonic:" + "\'" + mnemonic + "\'"
-				 		+ ",properties:{STARTRANK:'1',ENDRANK:'5'}},"
+				 		+ ",properties:{" + properties + "}},"
 				 	+ "]"
 				 + "}";
 	}

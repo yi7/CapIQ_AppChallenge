@@ -1,20 +1,31 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <Button 
-    	    android:id="@+id/graph_button"
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:layout_gravity="bottom|center"
-    	    android:text="@string/graph_button" />
-    
-    <Button 
-    	    android:id="@+id/table_button"
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:layout_gravity="bottom|left"
-    	    android:text="@string/table_button" />
-
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        
+	    <Button 
+	    	    android:id="@+id/linechart_button"
+	    	    android:layout_width="match_parent"
+	    	    android:layout_height="wrap_content"
+	    	    android:text="@string/linechart_button" />
+	    
+	    <Button 
+	    	    android:id="@+id/table_button"
+	    	    android:layout_width="match_parent"
+	    	    android:layout_height="wrap_content"
+	    	    android:text="@string/tablechart_button" />
+	    
+	    <Button 
+	    	    android:id="@+id/barchart_button"
+	    	    android:layout_width="match_parent"
+	    	    android:layout_height="wrap_content"
+	    	    android:text="@string/barchart_button" />
+	    
+	    
+	</LinearLayout>
+</ScrollView>

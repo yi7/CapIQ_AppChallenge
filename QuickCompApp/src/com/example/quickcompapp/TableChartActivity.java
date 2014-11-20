@@ -14,26 +14,17 @@ import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
 
-public class TableActivity extends Activity {
+public class TableChartActivity extends Activity {
 	private static final String TAG = "TableActivity";
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_table);
 		
-		//Intent i = getIntent();
-		//GDSSDKResponse[] sdkResponse = (GDSSDKResponse[])i.getSerializableExtra("sdkResponse");
-		//Log.d( TAG, sdkResponse[0].getRows()[0].getRow()[0] + "");
-		
 		String returned = getIntent().getStringExtra("json");
 		GDSSDKResponse[] sdkResponse;
 		
 		try{
-			//Gson gson = new Gson();
-			//Response response = gson.fromJson( returned, Response.class );
-			//sdkResponse = response.getGDSSDKResponse();
-			//Log.d( TAG, sdkResponse[0].getRows()[0].getRow()[0] + "");
-			
 			ParseData pd = new ParseData( returned );
 			pd.createGson();
 			sdkResponse = pd.getSdkResponse();
@@ -53,11 +44,11 @@ public class TableActivity extends Activity {
 						tempGson.createGson();
 						tempResponse = tempGson.getSdkResponse();
 					}*/
-					tempMarketCap = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_MARKETCAP").execute().get();
-					tempClosePrice = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_CLOSEPRICE").execute().get();
-					tempTotalRev = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_TOTAL_REV").execute().get();
-					tempBasicEPS = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_BASIC_EPS_INCL").execute().get();
-					tempNetMargin = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_NI_MARGIN").execute().get();
+					tempMarketCap = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_MARKETCAP", "STARTRANK:'1'").execute().get();
+					tempClosePrice = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_CLOSEPRICE", "STARTRANK:'1'").execute().get();
+					tempTotalRev = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_TOTAL_REV", "STARTRANK:'1'").execute().get();
+					tempBasicEPS = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_BASIC_EPS_INCL", "STARTRANK:'1'").execute().get();
+					tempNetMargin = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_NI_MARGIN", "STARTRANK:'1'").execute().get();
 					
 					ParseData tempMCData = new ParseData( tempMarketCap );
 					ParseData tempLPData = new ParseData( tempClosePrice );
