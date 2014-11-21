@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/black"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <LinearLayout
+        android:id="@+id/top_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true" >
+        
+        <Button 
+            android:id="@+id/overview_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:text="@string/overview_button" />
+        
+        <Button 
+            android:id="@+id/valuation_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:text="@string/valuation_button" />
+        
+        <Button 
+            android:id="@+id/operation_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:text="@string/operation_button" />
+     </LinearLayout>
+    
+    <HorizontalScrollView
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content" 
+    	android:layout_below="@+id/top_description" >
+    
+		<TableLayout
+		    android:id="@+id/main_table"
+		    android:background="@color/black"
+		    android:layout_width="wrap_content"
+		    android:layout_height="match_parent" >
+		
+		</TableLayout>
+	
+	</HorizontalScrollView>
+</RelativeLayout>

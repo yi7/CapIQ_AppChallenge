@@ -2,8 +2,6 @@ package com.example.quickcompapp;
 
 import java.util.concurrent.ExecutionException;
 
-import com.example.quickcompapp.Access.LoadData;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -15,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.example.quickcompapp.Access.LoadData;
 //import android.os.StrictMode;
 // Must add commons-codec-1.9.jar to build path
 
@@ -34,7 +35,9 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
+		
 		
 		//StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build();
 		//StrictMode.setThreadPolicy(policy);

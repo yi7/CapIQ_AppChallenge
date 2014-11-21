@@ -5,6 +5,40 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_description" />
+    
+    <LinearLayout
+        android:id="@+id/bottom_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true" >
+        
+        <Button 
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:text="@string/back_button" />
+        
+        <Button 
+            android:id="@+id/clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:text="@string/clear_button" />
+        
+        <Button 
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:text="@string/add_button" />
+        
+        <Button 
+            android:id="@+id/remove_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:text="@string/remove_button" />
+        
+    </LinearLayout>
  
 </RelativeLayout>

@@ -13,6 +13,13 @@
     <string name="linechart_button">Line Chart</string>
     <string name="tablechart_button">Table Chart</string>
     <string name="barchart_button">Bar Chart</string>
+    
     <string name="back_button">Back</string>
+    <string name="clear_button">Clear</string>
+    <string name="add_button">Add</string>
+    <string name="remove_button">Remove</string>
+    <string name="overview_button">Overview</string>
+    <string name="valuation_button">Valuation</string>
+    <string name="operation_button">Operation</string>
 
 </resources>
