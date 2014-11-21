@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
@@ -16,88 +17,62 @@ import android.widget.TextView;
 
 public class TableChartActivity extends Activity {
 	private static final String TAG = "TableActivity";
+	private String[] overviewM = {"IQ_MARKETCAP","IQ_CLOSEPRICE","IQ_TOTAL_REV","IQ_BASIC_EPS_INCL","IQ_NI_MARGIN"};
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_table);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_tablechart);
 		
 		String returned = getIntent().getStringExtra("json");
-		GDSSDKResponse[] sdkResponse;
+		GDSSDKResponse[] sdkResponse=null;
 		
 		try{
 			ParseData pd = new ParseData( returned );
 			pd.createGson();
 			sdkResponse = pd.getSdkResponse();
 			
-			createTableRow( "Ticker", "Market Cap ($MM)", "Close Price ($MM)", "Total Revenue ($MM)", "Basic EPS ($)", "Net Margin (%)" );
+			String[] heading = {"Ticker", "Market Cap ($MM)", "Close Price ($MM)", "Total Revenue ($MM)", "Basic EPS ($)", "Net Margin (%)"};
+			createTableRow( heading );
 			
-			String tempMarketCap, tempClosePrice, tempTotalRev, tempBasicEPS, tempNetMargin;
-			String[] mnemonics = {"IQ_MARKETCAP","IQ_CLOSEPRICE","IQ_TOTAL_REV","IQ_BASIC_EPS_INCL","IQ_NI_MARGIN"};
-			for( Rows r : sdkResponse[0].getRows() ) {
-				int cutIndex = r.getRow()[0].indexOf(':');
-				GDSSDKResponse[] tempResponse1=null, tempResponse2=null, tempResponse3=null, tempResponse4=null, tempResponse5=null;
-				
-				try {
-					/*for( String mnemonic: mnemonics ) {
-						tempJson = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), mnemonic).execute().get();
-						ParseData tempGson = new ParseData( tempJson );
-						tempGson.createGson();
-						tempResponse = tempGson.getSdkResponse();
-					}*/
-					tempMarketCap = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_MARKETCAP", "STARTRANK:'1'").execute().get();
-					tempClosePrice = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_CLOSEPRICE", "STARTRANK:'1'").execute().get();
-					tempTotalRev = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_TOTAL_REV", "STARTRANK:'1'").execute().get();
-					tempBasicEPS = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_BASIC_EPS_INCL", "STARTRANK:'1'").execute().get();
-					tempNetMargin = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_NI_MARGIN", "STARTRANK:'1'").execute().get();
-					
-					ParseData tempMCData = new ParseData( tempMarketCap );
-					ParseData tempLPData = new ParseData( tempClosePrice );
-					ParseData tempTRData = new ParseData( tempTotalRev );
-					ParseData tempBEPSData = new ParseData( tempBasicEPS );
-					ParseData tempNMData = new ParseData( tempNetMargin );
-					
-					tempMCData.createGson();
-					tempLPData.createGson();
-					tempTRData.createGson();
-					tempBEPSData.createGson();
-					tempNMData.createGson();
-					
-					tempResponse1 = tempMCData.getSdkResponse();
-					tempResponse2 = tempLPData.getSdkResponse();
-					tempResponse3 = tempTRData.getSdkResponse();
-					tempResponse4 = tempBEPSData.getSdkResponse();
-					tempResponse5 = tempNMData.getSdkResponse();
-				} catch ( Exception e ) {
-					// TODO Auto-generated catch block
-					Log.d( TAG, "error with try in for loop" );
-					e.printStackTrace();
-				}
-				
-				
-				//Log.d( TAG, r.getRow()[0].substring(cutIndex+1) + ":" + tempResponse[0].getRows()[0].getRow()[0] );
-				createTableRow( r.getRow()[0].substring(cutIndex+1),
-						tempResponse1[0].getRows()[0].getRow()[0] ,
-						tempResponse2[0].getRows()[0].getRow()[0] ,
-						tempResponse3[0].getRows()[0].getRow()[0] ,
-						tempResponse4[0].getRows()[0].getRow()[0] ,
-						tempResponse5[0].getRows()[0].getRow()[0] );
-			}
 		} catch( Exception e ) {
 			Log.d(TAG, "error with something");
 		}
 		
+		for( Rows r : sdkResponse[0].getRows() ) {
+			int cutIndex = r.getRow()[0].indexOf(':');
+			String[] tableRow = new String[6];
+			GDSSDKResponse[] tempResponse=null;
+			try {
+				int i = 0;
+				tableRow[i++] = r.getRow()[0].substring(cutIndex+1);
+				for( String mnemonic: overviewM ) {
+					String tempJson = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), mnemonic, "STARTRANK:'1'").execute().get();
+					ParseData tempGson = new ParseData( tempJson );
+					tempGson.createGson();
+					tempResponse = tempGson.getSdkResponse();
+					tableRow[i++] = tempResponse[0].getRows()[0].getRow()[0];
+				}
+				
+			} catch ( Exception e ) {
+				// TODO Auto-generated catch block
+				Log.d( TAG, "error with try in for loop" );
+				e.printStackTrace();
+			}
+			
+			createTableRow( tableRow );
+		}
 	}
 	
-	public void createTableRow( String ticker, String marketCap, String closePrice, String totalRev, String basicEPS, String netMargin ) {
-		
-		String[] dataList = {marketCap, closePrice, totalRev, basicEPS, netMargin}; String temp;
-		for( int i = 0; i < dataList.length; i++ ) {
-			if( dataList[i].equals("Data Unavailable")) {
-				dataList[i] = "-----";
+	public void createTableRow( String[] rowData ) {
+		for( int i = 0; i < rowData.length; i++ ) {
+			String temp;
+			if( rowData[i].equals("Data Unavailable")) {
+				rowData[i] = "-----";
 			}
-			else if( dataList[i].indexOf('.') > 0 ) {
-				temp = dataList[i].substring( 0, dataList[i].length() - 4 );
-				dataList[i] = temp;
+			else if( rowData[i].indexOf('.') > 0 ) {
+				temp = rowData[i].substring( 0, rowData[i].length() - 4 );
+				rowData[i] = temp;
 			}
 		}
 		
@@ -106,23 +81,18 @@ public class TableChartActivity extends Activity {
 		LayoutParams lp = new LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		tr.setLayoutParams(lp);
 		
-		TextView companies = new TextView(this);
-		companies.setLayoutParams(lp);
-		companies.setTextColor(Color.WHITE);
-		companies.setText( ticker );
-		tr.addView(companies);
-		
-		for( int i = 0; i < dataList.length; i++ ) {
-			TextView space = new TextView(this);
-			space.setLayoutParams(lp);
-			space.setText( "    " );
-			tr.addView(space);
+		for( int i = 0; i < rowData.length; i++ ) {
 			
 			TextView data = new TextView(this);
 			data.setLayoutParams(lp);
 			data.setTextColor(Color.WHITE);
-			data.setText( dataList[i] );
+			data.setText( rowData[i] );
 			tr.addView(data);
+			
+			TextView space = new TextView(this);
+			space.setLayoutParams(lp);
+			space.setText( "    " );
+			tr.addView(space);
 		}
 		
 		tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
