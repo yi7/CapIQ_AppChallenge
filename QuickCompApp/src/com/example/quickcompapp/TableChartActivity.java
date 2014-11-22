@@ -1,21 +1,40 @@
 package com.example.quickcompapp;
 
-import com.example.quickcompapp.Access.LoadData;
-import com.example.quickcompapp.Access.ParseData;
-import com.example.quickcompapp.Response.GDSSDKResponse;
-import com.example.quickcompapp.Response.Rows;
+import java.util.Arrays;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
 
+import com.example.quickcompapp.Access.LoadData;
+import com.example.quickcompapp.Access.ParseData;
+import com.example.quickcompapp.Response.GDSSDKResponse;
+import com.example.quickcompapp.Response.Rows;
+
 public class TableChartActivity extends Activity {
+	
+	final Context context = this;
+	
+	private Button mBackButton;
+	private Button mClearButton;
+	private Button mAddButton;
+	private Button mRemoveButton;
+	
 	private static final String TAG = "TableActivity";
 	private String[] overviewM = {"IQ_MARKETCAP","IQ_CLOSEPRICE","IQ_TOTAL_REV","IQ_BASIC_EPS_INCL","IQ_NI_MARGIN"};
 
@@ -24,22 +43,105 @@ public class TableChartActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_tablechart);
 		
-		String returned = getIntent().getStringExtra("json");
-		GDSSDKResponse[] sdkResponse=null;
+		mBackButton = (Button)findViewById(R.id.back_button);
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(TableChartActivity.this, MainActivity.class);
+				startActivity( i );
+			}
+		});
+        
+        mClearButton = (Button)findViewById(R.id.clear_button);
+        mClearButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+        
+        mAddButton = (Button)findViewById(R.id.add_button);
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LayoutInflater li = LayoutInflater.from(context);
+				View promptsView = li.inflate(R.layout.prompts, null );
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+				
+				//set prompts.xml to alertdialog builder
+				alertDialogBuilder.setView(promptsView);
+				final EditText userInput = (EditText) promptsView.findViewById(R.id.editTextDialogUserInput);
+				
+				//set dialog message
+				alertDialogBuilder
+					.setCancelable(false)
+					.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									String identifier = userInput.getText().toString();
+									
+								}
+							})
+					.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									// TODO Auto-generated method stub
+									dialog.cancel();
+								}
+					});
+				
+				AlertDialog alertDialog = alertDialogBuilder.create();
+				alertDialog.show();
+				
+			}
+		});
+        
+        mRemoveButton = (Button)findViewById(R.id.remove_button);
+        mRemoveButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LayoutInflater li = LayoutInflater.from(context);
+				View promptsView = li.inflate(R.layout.prompts, null );
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+				
+				//set prompts.xml to alertdialog builder
+				alertDialogBuilder.setView(promptsView);
+				final EditText userInput = (EditText) promptsView.findViewById(R.id.editTextDialogUserInput);
+				
+				//set dialog message
+				alertDialogBuilder
+					.setCancelable(false)
+					.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									String identifier = userInput.getText().toString();
+									
+									
+								}
+							})
+					.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									// TODO Auto-generated method stub
+									dialog.cancel();
+								}
+					});
+				
+				AlertDialog alertDialog = alertDialogBuilder.create();
+				alertDialog.show();
+				
+			}
+		});
 		
-		try{
-			ParseData pd = new ParseData( returned );
-			pd.createGson();
-			sdkResponse = pd.getSdkResponse();
-			
-			String[] heading = {"Ticker", "Market Cap ($MM)", "Close Price ($MM)", "Total Revenue ($MM)", "Basic EPS ($)", "Net Margin (%)"};
-			createTableRow( heading );
-			
-		} catch( Exception e ) {
-			Log.d(TAG, "error with something");
-		}
+        Parcelable[] test = getIntent().getParcelableArrayExtra("rows");
+        Rows[] rows = new Rows[test.length];
+        rows = Arrays.copyOf(test, test.length, Rows[].class);
 		
-		for( Rows r : sdkResponse[0].getRows() ) {
+		for( Rows r : rows ) {
 			int cutIndex = r.getRow()[0].indexOf(':');
 			String[] tableRow = new String[6];
 			GDSSDKResponse[] tempResponse=null;
@@ -65,6 +167,7 @@ public class TableChartActivity extends Activity {
 	}
 	
 	public void createTableRow( String[] rowData ) {
+		
 		for( int i = 0; i < rowData.length; i++ ) {
 			String temp;
 			if( rowData[i].equals("Data Unavailable")) {
@@ -91,7 +194,7 @@ public class TableChartActivity extends Activity {
 			
 			TextView space = new TextView(this);
 			space.setLayoutParams(lp);
-			space.setText( "    " );
+			space.setText( "   " );
 			tr.addView(space);
 		}
 		
