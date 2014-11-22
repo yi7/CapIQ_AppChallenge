@@ -1,5 +1,6 @@
 package com.example.quickcompapp;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
@@ -18,6 +19,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.quickcompapp.Access.LoadData;
+import com.example.quickcompapp.Access.ParseData;
+import com.example.quickcompapp.Response.GDSSDKResponse;
+import com.example.quickcompapp.Response.Rows;
 //import android.os.StrictMode;
 // Must add commons-codec-1.9.jar to build path
 
@@ -28,7 +32,8 @@ public class MainActivity extends Activity {
 	private Button mBarChartButton;
 	
 	final Context context = this;
-	private String returned;
+	
+	private ArrayList<Rows[]> tickerList = new ArrayList<Rows[]>();
 	
 	private static final String TAG = "MainActivity";
 
@@ -47,6 +52,7 @@ public class MainActivity extends Activity {
         mLineChartButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				String returned="";
 				try {
 					returned = new LoadData("GDSHE", "FB", "IQ_QUICK_COMP", "STARTRANK:'1',ENDRANK:'5'").execute().get();
 				} catch (InterruptedException e1) {
@@ -89,8 +95,12 @@ public class MainActivity extends Activity {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									String identifier = userInput.getText().toString();
+									String returned=""; GDSSDKResponse[] sdkResponse=null;
 									try {
 										returned = new LoadData("GDSHE", identifier, "IQ_QUICK_COMP", "STARTRANK:'1',ENDRANK:'5'").execute().get();
+										ParseData pd = new ParseData( returned );
+										pd.createGson();
+										sdkResponse = pd.getSdkResponse();
 									} catch (InterruptedException e1) {
 										// TODO Auto-generated catch block
 										e1.printStackTrace();
@@ -99,11 +109,10 @@ public class MainActivity extends Activity {
 										e1.printStackTrace();
 									}
 									
-									Intent i = new Intent(MainActivity.this, TableChartActivity.class);
 									try{
-										i.putExtra( "json", returned );
+										Intent i = new Intent(MainActivity.this, TableChartActivity.class);
+										i.putExtra("rows", sdkResponse[0].getRows());
 										startActivity( i );
-										
 									} catch( Exception e ) {
 										Log.d( TAG, "error" );
 									}
@@ -129,6 +138,7 @@ public class MainActivity extends Activity {
         mBarChartButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				String returned="";
 				try {
 					returned = new LoadData("GDSHE", "FB", "IQ_QUICK_COMP", "STARTRANK:'1',ENDRANK:'3'").execute().get();
 				} catch (InterruptedException e1) {
