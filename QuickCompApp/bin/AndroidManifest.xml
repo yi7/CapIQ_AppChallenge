@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
             <intent-filter>
@@ -29,6 +29,7 @@
         <activity android:name="LineChartActivity"></activity>
         <activity android:name="TableChartActivity"></activity>
         <activity android:name="BarChartActivityMultiDataset"></activity>
+        <activity android:name="MainActivity"></activity>
     </application>
 
 </manifest>

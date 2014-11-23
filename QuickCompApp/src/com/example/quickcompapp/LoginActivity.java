@@ -25,60 +25,59 @@ import com.example.quickcompapp.Response.Rows;
 //import android.os.StrictMode;
 // Must add commons-codec-1.9.jar to build path
 
-public class MainActivity extends Activity {
+public class LoginActivity extends Activity {
 	
-	private Button mLineChartButton;
-	private Button mTableChartButton;
-	private Button mBarChartButton;
-	private Button mLogoutButton;
+	private Button mLoginButton;
+	private EditText mUsrName;
+	private EditText mPass;
 	
 	final Context context = this;
 	
 	private ArrayList<Rows[]> tickerList = new ArrayList<Rows[]>();
 	
-	private static final String TAG = "MainActivity";
+	private static final String TAG = "LoginActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_login);
 		
 		
 		//StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build();
 		//StrictMode.setThreadPolicy(policy);
 		
 		
-		mLineChartButton = (Button)findViewById(R.id.linechart_button);
-        mLineChartButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String returned="";
-				try {
-					returned = new LoadData("GDSHE", "FB", "IQ_QUICK_COMP", "STARTRANK:'1',ENDRANK:'5'").execute().get();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ExecutionException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				Intent i = new Intent(MainActivity.this, LineChartActivity.class);
-				try{
-					i.putExtra( "json", returned );
-					startActivity( i );
-					
-				} catch( Exception e ) {
-					Log.d( TAG, "error" );
-				}
-			}
-		});
+		mLoginButton = (Button)findViewById(R.id.login_button);
+		mUsrName = (EditText) findViewById(R.id.username);
+		mPass = (EditText) findViewById(R.id.password);
 		
-        mTableChartButton = (Button)findViewById(R.id.table_button);
-        mTableChartButton.setOnClickListener(new View.OnClickListener() {
+		mLoginButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				String usr = mUsrName.getText().toString();
+				String pass = mPass.getText().toString();
+				
+				
+				if (usr.equals("admin") && pass.equals("iq")) {
+					Log.d(TAG, usr + ',' + pass);
+					
+					Intent i = new Intent(LoginActivity.this, MainActivity.class);
+					try{
+						startActivity( i );
+					} catch( Exception e ) {
+						Log.d( TAG, "error" );
+					}
+				}
+				else {
+					Intent i = new Intent(LoginActivity.this, LoginActivity.class);
+					try{
+						startActivity( i );
+					} catch( Exception e ) {
+						Log.d( TAG, "error" );
+					}
+				}
+				/*
 				//get prompts.xml view
 				LayoutInflater li = LayoutInflater.from(context);
 				View promptsView = li.inflate(R.layout.prompts, null );
@@ -111,7 +110,7 @@ public class MainActivity extends Activity {
 									}
 									
 									try{
-										Intent i = new Intent(MainActivity.this, TableChartActivity.class);
+										Intent i = new Intent(LoginActivity.this, TableChartActivity.class);
 										i.putExtra("rows", sdkResponse[0].getRows());
 										startActivity( i );
 									} catch( Exception e ) {
@@ -131,47 +130,7 @@ public class MainActivity extends Activity {
 				AlertDialog alertDialog = alertDialogBuilder.create();
 				alertDialog.show();
 				
-				
-			}
-		});
-        
-        mBarChartButton = (Button)findViewById(R.id.barchart_button);
-        mBarChartButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String returned="";
-				try {
-					returned = new LoadData("GDSHE", "FB", "IQ_QUICK_COMP", "STARTRANK:'1',ENDRANK:'3'").execute().get();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ExecutionException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				Intent i = new Intent(MainActivity.this, BarChartActivityMultiDataset.class);
-				try{
-					i.putExtra( "json", returned );
-					startActivity( i );
-				} catch( Exception e ) {
-					Log.d( TAG, "error" );
-				}
-			}
-		});
-        
-        mLogoutButton = (Button)findViewById(R.id.logout_button);
-        mLogoutButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG, "WW");
-				
-				Intent i = new Intent(MainActivity.this, LoginActivity.class);
-				try{
-					startActivity( i );
-				} catch( Exception e ) {
-					Log.d( TAG, "error" );
-				}
+				*/
 			}
 		});
 	}

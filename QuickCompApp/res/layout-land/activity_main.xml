@@ -1,5 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/black"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -25,6 +25,12 @@
 	    	    android:layout_width="match_parent"
 	    	    android:layout_height="wrap_content"
 	    	    android:text="@string/barchart_button" />
+	    
+	    <Button 
+	    	    android:id="@+id/logout_button"
+	    	    android:layout_width="match_parent"
+	    	    android:layout_height="wrap_content"
+	    	    android:text="@string/logout_button" />
 	    
 	    
 	</LinearLayout>
