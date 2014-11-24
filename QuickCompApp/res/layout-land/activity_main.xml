@@ -9,22 +9,10 @@
         android:orientation="vertical" >
         
 	    <Button 
-	    	    android:id="@+id/linechart_button"
-	    	    android:layout_width="match_parent"
-	    	    android:layout_height="wrap_content"
-	    	    android:text="@string/linechart_button" />
-	    
-	    <Button 
 	    	    android:id="@+id/table_button"
 	    	    android:layout_width="match_parent"
 	    	    android:layout_height="wrap_content"
 	    	    android:text="@string/tablechart_button" />
-	    
-	    <Button 
-	    	    android:id="@+id/barchart_button"
-	    	    android:layout_width="match_parent"
-	    	    android:layout_height="wrap_content"
-	    	    android:text="@string/barchart_button" />
 	    
 	    
 	</LinearLayout>

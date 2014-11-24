@@ -43,37 +43,6 @@ public class MainActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		
-		
-		//StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build();
-		//StrictMode.setThreadPolicy(policy);
-		
-		
-		mLineChartButton = (Button)findViewById(R.id.linechart_button);
-        mLineChartButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String returned="";
-				try {
-					returned = new LoadData("GDSHE", "FB", "IQ_QUICK_COMP", "STARTRANK:'1',ENDRANK:'5'").execute().get();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ExecutionException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				Intent i = new Intent(MainActivity.this, LineChartActivity.class);
-				try{
-					i.putExtra( "json", returned );
-					startActivity( i );
-					
-				} catch( Exception e ) {
-					Log.d( TAG, "error" );
-				}
-			}
-		});
-		
         mTableChartButton = (Button)findViewById(R.id.table_button);
         mTableChartButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -133,33 +102,7 @@ public class MainActivity extends Activity {
 				
 			}
 		});
-        
-        mBarChartButton = (Button)findViewById(R.id.barchart_button);
-        mBarChartButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String returned="";
-				try {
-					returned = new LoadData("GDSHE", "FB", "IQ_QUICK_COMP", "STARTRANK:'1',ENDRANK:'3'").execute().get();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ExecutionException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				Intent i = new Intent(MainActivity.this, BarChartActivityMultiDataset.class);
-				try{
-					i.putExtra( "json", returned );
-					startActivity( i );
-				} catch( Exception e ) {
-					Log.d( TAG, "error" );
-				}
-			}
-		});
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

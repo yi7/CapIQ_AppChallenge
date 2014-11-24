@@ -30,7 +30,7 @@
             android:text="@string/operation_button" />
      </LinearLayout>
     
-    <HorizontalScrollView
+    <ScrollView
     	android:layout_width="match_parent"
     	android:layout_height="wrap_content"
     	android:background="@color/black"
@@ -39,90 +39,12 @@
     
 		<TableLayout
 		    android:id="@+id/main_table"
-		    android:layout_width="wrap_content"
-		    android:layout_height="match_parent" >
-		    
-		    <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
-		        <TextView android:text="Ticker" android:textColor="@color/white" />
-		        <TextView android:text="   " />
-		        <TextView android:text="Market Cap ($MM)" android:textColor="@color/white"/>
-		        <TextView android:text="   " />
-		        <TextView android:text="Close Price ($MM)" android:textColor="@color/white"/>
-		        <TextView android:text="   " />
-		        <TextView android:text="Total Revenue ($MM)" android:textColor="@color/white"/>
-		        <TextView android:text="   " />
-		        <TextView android:text="Basic EPS ($)" android:textColor="@color/white"/>
-		        <TextView android:text="   " />
-		        <TextView android:text="Net Margin (%)" android:textColor="@color/white"/>
-		    </TableRow>
-		    
-		    <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
-		        <TextView android:text="" android:textColor="@color/white" />
-		        <TextView android:text="" />
-		        <LinearLayout 
-		            android:layout_width="wrap_content" android:layout_height="wrap_content" >
-		            <Button
-		                android:layout_width="20px"
-		                android:layout_height="20px" 
-		                android:id="@+id/linechart1_button" />
-		            <Button 
-		                android:layout_width="20px"
-		                android:layout_height="20px"
-		                android:id="@+id/barchart1_button" />
-		        </LinearLayout>
-		        <TextView android:text="   " />
-		        <LinearLayout 
-		            android:layout_width="wrap_content" android:layout_height="wrap_content" >
-		            <Button
-		                android:layout_width="20px"
-		                android:layout_height="20px" 
-		                android:id="@+id/linechart2_button" />
-		            <Button 
-		                android:layout_width="20px"
-		                android:layout_height="20px"
-		                android:id="@+id/barchart2_button" />
-		        </LinearLayout>
-		        <TextView android:text="   " />
-		        <LinearLayout 
-		            android:layout_width="wrap_content" android:layout_height="wrap_content" >
-		            <Button
-		                android:layout_width="20px"
-		                android:layout_height="20px" 
-		                android:id="@+id/linechart3_button" />
-		            <Button 
-		                android:layout_width="20px"
-		                android:layout_height="20px"
-		                android:id="@+id/barchart3_button" />
-		        </LinearLayout>
-		        <TextView android:text="   " />
-		        <LinearLayout 
-		            android:layout_width="wrap_content" android:layout_height="wrap_content" >
-		            <Button
-		                android:layout_width="20px"
-		                android:layout_height="20px" 
-		                android:id="@+id/linechart4_button" />
-		            <Button 
-		                android:layout_width="20px"
-		                android:layout_height="20px"
-		                android:id="@+id/barchart4_button" />
-		        </LinearLayout>
-		        <TextView android:text="   " />
-		        <LinearLayout 
-		            android:layout_width="wrap_content" android:layout_height="wrap_content" >
-		            <Button
-		                android:layout_width="20px"
-		                android:layout_height="20px" 
-		                android:id="@+id/linechart5_button" />
-		            <Button 
-		                android:layout_width="20px"
-		                android:layout_height="20px"
-		                android:id="@+id/barchart5_button" />
-		        </LinearLayout>
-		    </TableRow>
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content" >
 		
 		</TableLayout>
 	
-	</HorizontalScrollView>
+	</ScrollView>
 	
 	<LinearLayout
         android:id="@+id/bottom_description"
@@ -130,30 +52,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true" >
-        
-        <Button 
-            android:id="@+id/back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:text="@string/back_button" />
-        
-        <Button 
-            android:id="@+id/clear_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:text="@string/clear_button" />
+
+		<Button
+		    android:id="@+id/clear_button"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/clear_button" />
         
         <Button 
             android:id="@+id/add_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
             android:text="@string/add_button" />
-        
-        <Button 
-            android:id="@+id/remove_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:text="@string/remove_button" />
         
     </LinearLayout>
 </RelativeLayout>

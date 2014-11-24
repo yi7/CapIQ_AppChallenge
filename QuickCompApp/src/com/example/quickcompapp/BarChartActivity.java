@@ -1,7 +1,7 @@
 package com.example.quickcompapp;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+import java.util.Arrays;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,12 +36,9 @@ import com.github.mikephil.charting.utils.Legend.LegendPosition;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.YLabels;
 
-public class BarChartActivityMultiDataset extends Activity implements OnChartValueSelectedListener {
+public class BarChartActivity extends Activity implements OnChartValueSelectedListener {
 	
 	final Context context = this;
-	
-	private String mnemonic;
-	
 	private Button mBackButton;
 	private Button mClearButton;
 	private Button mAddButton;
@@ -49,6 +47,8 @@ public class BarChartActivityMultiDataset extends Activity implements OnChartVal
 	private BarChart mChart;
 	private ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
 	private int[] Colors = {Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA}; int colorIndex;
+	
+	private ArrayList<String> tickerList = new ArrayList<String>();
 
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +61,22 @@ public class BarChartActivityMultiDataset extends Activity implements OnChartVal
         mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(BarChartActivityMultiDataset.this, MainActivity.class);
-				startActivity( i );
+				Rows[] rows = new Rows[tickerList.size()];
+				for( int i = 0; i < tickerList.size(); i++ ) {
+					Rows tempRows = new Rows();
+					String[] s = new String[1];
+					s[0] = tickerList.get(i);
+					tempRows.setRow(s);
+					rows[i] = tempRows;
+				}
+				
+				try{
+					Intent i = new Intent(BarChartActivity.this, TableChartActivity.class);
+					i.putExtra("rows", rows);
+					startActivity( i );
+				} catch( Exception e ) {
+					e.printStackTrace();
+				}
 			}
 		});
         
@@ -70,6 +84,7 @@ public class BarChartActivityMultiDataset extends Activity implements OnChartVal
         mClearButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				tickerList.clear();
 				dataSets.clear();
 				mChart.clear();
 			}
@@ -108,9 +123,8 @@ public class BarChartActivityMultiDataset extends Activity implements OnChartVal
 									if( colorIndex > Colors.length-1 ) {
 										colorIndex = 0;
 									}
-									
+									tickerList.add(identifier);
 									setData( sdkResponse[0].getRows(), sdkResponse[0].getIdentifier() );
-								
 								}
 							})
 					.setNegativeButton("Cancel",
@@ -154,6 +168,7 @@ public class BarChartActivityMultiDataset extends Activity implements OnChartVal
 									for( i = 0; i < idList.length; i++ ) {
 										if( idList[i].equals(identifier)) {
 											dataSets.remove(i);
+											tickerList.remove(i);
 											break;
 										}
 									}
@@ -177,34 +192,29 @@ public class BarChartActivityMultiDataset extends Activity implements OnChartVal
 		});
         
         mChart = (BarChart)findViewById(R.id.chart1);
-        mChart.setUnit("$MM");
+        mChart.setUnit("");
         mChart.setHighlightEnabled(true);
         mChart.setHighlightIndicatorEnabled(true);
-        //mChart.setOnChartGestureListener(this);
         mChart.setOnChartValueSelectedListener(this);
         mChart.setDrawYValues(false);
         mChart.setPinchZoom(false);
         mChart.setValueFormatter(new LargeValueFormatter());
         mChart.setDrawBarShadow(false);
-        mChart.setDrawGridBackground(false);
-        mChart.setDrawHorizontalGrid(false);
+        mChart.setDrawGridBackground(true);
+        mChart.setDrawHorizontalGrid(true);
+        mChart.setDrawValueAboveBar(true);
+        mChart.setStartAtZero(false);
         
-        String returned = getIntent().getStringExtra("json");
-		GDSSDKResponse[] sdkResponse=null;
-		try{
-			ParseData pd = new ParseData( returned );
-			pd.createGson();
-			sdkResponse = pd.getSdkResponse();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		for( Rows r : sdkResponse[0].getRows() ) {
-			int cutIndex = r.getRow()[0].indexOf(':');
+        Parcelable[] parcel = getIntent().getParcelableArrayExtra("rows");
+        Rows[] rows = new Rows[parcel.length];
+        rows = Arrays.copyOf(parcel, parcel.length, Rows[].class);
+        String mnemonic = getIntent().getStringExtra("mnemonic");
+        
+		for( Rows r : rows ) {
 			GDSSDKResponse[] tempResponse=null;
-			
+			tickerList.add(r.getRow()[0]);
 			try{
-				String tempReturned = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_MARKETCAP", "STARTDATE:'10/01/2014',ENDDATE:'10/10/2014'").execute().get();
+				String tempReturned = new LoadData("GDSHE", r.getRow()[0], mnemonic, "STARTRANK:1").execute().get();
 				ParseData tempPd = new ParseData( tempReturned );
 				tempPd.createGson();
 				tempResponse = tempPd.getSdkResponse();
@@ -215,7 +225,6 @@ public class BarChartActivityMultiDataset extends Activity implements OnChartVal
 			if( colorIndex > Colors.length-1 ) {
 				colorIndex = 0;
 			}
-			
 			setData( tempResponse[0].getRows(), tempResponse[0].getIdentifier() );
 		}
 		
@@ -245,7 +254,7 @@ public class BarChartActivityMultiDataset extends Activity implements OnChartVal
     		String date = rows[i].getRow()[1];
     		xVals.add( date.substring(0, date.length()-5) );
     		String data = rows[i].getRow()[0];
-            yVals.add(new BarEntry(Float.parseFloat(data.substring(0, data.length()-9)), i));
+            yVals.add(new BarEntry(Float.parseFloat(data), i));
     	}
 		
 		BarDataSet set1 = new BarDataSet( yVals, id );

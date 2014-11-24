@@ -28,7 +28,7 @@
         </activity>
         <activity android:name="LineChartActivity"></activity>
         <activity android:name="TableChartActivity"></activity>
-        <activity android:name="BarChartActivityMultiDataset"></activity>
+        <activity android:name="BarChartActivity"></activity>
     </application>
 
 </manifest>

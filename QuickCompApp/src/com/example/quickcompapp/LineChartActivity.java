@@ -1,6 +1,7 @@
 package com.example.quickcompapp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,6 +10,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -42,7 +45,9 @@ public class LineChartActivity extends Activity {
 	private final String TAG = "LineChartActivity";
 	private LineChart mChart;
 	private ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-	private int[] Colors = {Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA}; int colorIndex;    
+	private int[] Colors = {Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA}; int colorIndex;
+	
+	private ArrayList<String> tickerList = new ArrayList<String>();
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,8 +61,22 @@ public class LineChartActivity extends Activity {
         mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(LineChartActivity.this, MainActivity.class);
-				startActivity( i );
+				Rows[] rows = new Rows[tickerList.size()];
+				for( int i = 0; i < tickerList.size(); i++ ) {
+					Rows tempRows = new Rows();
+					String[] s = new String[1];
+					s[0] = tickerList.get(i);
+					tempRows.setRow(s);
+					rows[i] = tempRows;
+				}
+				
+				try{
+					Intent i = new Intent(LineChartActivity.this, TableChartActivity.class);
+					i.putExtra("rows", rows);
+					startActivity( i );
+				} catch( Exception e ) {
+					e.printStackTrace();
+				}
 			}
 		});
         
@@ -65,6 +84,7 @@ public class LineChartActivity extends Activity {
         mClearButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				tickerList.clear();
 				dataSets.clear();
 				mChart.clear();
 			}
@@ -103,9 +123,8 @@ public class LineChartActivity extends Activity {
 									if( colorIndex > Colors.length-1 ) {
 										colorIndex = 0;
 									}
-									
+									tickerList.add(identifier);
 									setData( sdkResponse[0].getRows(), sdkResponse[0].getIdentifier() );
-								
 								}
 							})
 					.setNegativeButton("Cancel",
@@ -149,6 +168,7 @@ public class LineChartActivity extends Activity {
 									for( i = 0; i < idList.length; i++ ) {
 										if( idList[i].equals(identifier)) {
 											dataSets.remove(i);
+											tickerList.remove(i);
 											break;
 										}
 									}
@@ -172,7 +192,7 @@ public class LineChartActivity extends Activity {
 		});
  
         mChart = (LineChart)findViewById(R.id.chart1);
-        mChart.setUnit("$MM");
+        mChart.setUnit("");
         mChart.setDrawUnitsInChart(true);
         mChart.setStartAtZero(false);
         mChart.setDrawYValues(false);
@@ -184,23 +204,18 @@ public class LineChartActivity extends Activity {
         mChart.setScaleEnabled(true);
         mChart.setPinchZoom(true);
         mChart.setBackgroundColor(Color.GRAY);
+        mChart.setStartAtZero(false);
         
-        String returned = getIntent().getStringExtra("json");
-		GDSSDKResponse[] sdkResponse=null;
-		try{
-			ParseData pd = new ParseData( returned );
-			pd.createGson();
-			sdkResponse = pd.getSdkResponse();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        Parcelable[] parcel = getIntent().getParcelableArrayExtra("rows");
+        Rows[] rows = new Rows[parcel.length];
+        rows = Arrays.copyOf(parcel, parcel.length, Rows[].class);
+        String mnemonic = getIntent().getStringExtra("mnemonic");
 		
-		for( Rows r : sdkResponse[0].getRows() ) {
-			int cutIndex = r.getRow()[0].indexOf(':');
+		for( Rows r : rows ) {
 			GDSSDKResponse[] tempResponse=null;
-			
+			tickerList.add(r.getRow()[0]);
 			try{
-				String tempReturned = new LoadData("GDSHE", r.getRow()[0].substring(cutIndex+1), "IQ_MARKETCAP", "STARTDATE:'10/01/2014',ENDDATE:'10/10/2014'").execute().get();
+				String tempReturned = new LoadData("GDSHE", r.getRow()[0], mnemonic, "STARTDATE:'10/01/2014',ENDDATE:'10/10/2014'").execute().get();
 				ParseData tempPd = new ParseData( tempReturned );
 				tempPd.createGson();
 				tempResponse = tempPd.getSdkResponse();
@@ -208,6 +223,9 @@ public class LineChartActivity extends Activity {
 				e.printStackTrace();
 			}
 			
+			if( colorIndex > Colors.length-1 ) {
+				colorIndex = 0;
+			}
 			setData( tempResponse[0].getRows(), tempResponse[0].getIdentifier() );
 		}
 		
@@ -222,9 +240,10 @@ public class LineChartActivity extends Activity {
     	
     	for( int i = 0; i < rows.length; i++ ) {
     		String date = rows[i].getRow()[1];
-    		xVals.add( date.substring(0, date.length()-5) );
+    		xVals.add( date );
     		String data = rows[i].getRow()[0];
-            yVals.add(new Entry(Float.parseFloat(data/*.substring(0, data.length()-9)*/), i));
+    		Log.d( "Test", data );
+            yVals.add(new Entry(Float.parseFloat(data), i));
     	}
     	
     	LineDataSet set1 = new LineDataSet(yVals, id );
